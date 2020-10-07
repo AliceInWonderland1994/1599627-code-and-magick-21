@@ -19,6 +19,44 @@ var renderCloud = function(ctx, x, y) {
   ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
+var renderColumn = function(ctx, name, time, position, maxTime, color) {
+    var barHeight = time / maxTime * BAR_HEIGHT;
+    var offsetLeft = BASE_COL_OFFSET_X + (BAR_WIDTH + COL_GAP) * position;
+
+    ctx.fillStyle = color;
+
+    ctx.fillRect(
+      offsetLeft,
+      BASE_COL_OFFSET_Y + (BAR_HEIGHT - barHeight),
+      BAR_WIDTH,
+      barHeight
+    );
+
+    ctx.fillStyle = '#000';
+
+    ctx.fillText(
+      name,
+      offsetLeft,
+      BASE_COL_OFFSET_Y + BAR_HEIGHT + GAP
+    );
+
+    ctx.fillText(
+      Math.round(time),
+      offsetLeft,
+      BASE_TIME_OFFSET_Y + (BAR_HEIGHT - barHeight)
+    );
+};
+
+var getColor = function(name) {
+  var color;
+  if (name === 'Вы') {
+    color = '#f00';
+  } else {
+    color = 'hsl(226,' + Math.random() * 100 + '%, 31%)';
+  }
+  return color;
+};
+
 var getMaxElement = function(arr) {
   var maxElement = arr[0];
 
@@ -41,40 +79,22 @@ window.renderStatistics = function(ctx, players, times) {
   ctx.fillStyle = '#000';
   ctx.font = '16px PT Mono';
   ctx.textBaseline = 'hanging';
-  ctx.fillText('Ура, вы победили!', CLOUD_X + 20, CLOUD_Y + 20);
-  ctx.fillText('Список результатов:', CLOUD_X + 20, CLOUD_Y + 40);
+
+  var renderText = function (ctx, x, y) {
+    ctx.fillText('Ура, вы победили!', CLOUD_X + 20, CLOUD_Y + 20);
+    ctx.fillText('Список результатов:', CLOUD_X + 20, CLOUD_Y + 40);
+  };
+
+  renderText(
+    ctx,
+    CLOUD_X,
+    CLOUD_X
+    );
 
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < players.length; i++) {
-    var barHeight = times[i] / maxTime * BAR_HEIGHT;
-    var offsetLeft = BASE_COL_OFFSET_X + (BAR_WIDTH + COL_GAP) * i;
-
-    if (players[i] === 'Вы') {
-      ctx.fillStyle = '#f00';
-    } else {
-      ctx.fillStyle = 'hsl(226,' + Math.random() * 100 + '%, 31%)';
-    }
-
-    ctx.fillRect(
-      offsetLeft,
-      BASE_COL_OFFSET_Y + (BAR_HEIGHT - barHeight),
-      BAR_WIDTH,
-      barHeight
-    );
-
-    ctx.fillStyle = '#000';
-
-    ctx.fillText(
-      players[i],
-      offsetLeft,
-      BASE_COL_OFFSET_Y + BAR_HEIGHT + GAP
-    );
-
-    ctx.fillText(
-      Math.round(times[i]),
-      offsetLeft,
-      BASE_TIME_OFFSET_Y + (BAR_HEIGHT - barHeight)
-    );
-  };
+    var color = getColor(players[i]);
+    renderColumn(ctx, players[i], times[i], i, maxTime, color);
+  }
 };
