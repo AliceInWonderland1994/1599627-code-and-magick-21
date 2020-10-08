@@ -56,7 +56,7 @@ var fillWizardsArray = function () {
 
   for (var i = 0; i < MAX_WIZARDS_COUNT; i++) {
     wArray.push(generateRandomWizard());
-  };
+  }
   return wArray;
 };
 
