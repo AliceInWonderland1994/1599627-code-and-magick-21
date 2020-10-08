@@ -28,32 +28,35 @@ var generateWizard = function(name, coatColor, eyesColor) {
   return {name, coatColor, eyesColor};
 };
 
+var getRandomNumber = function(max) {
+  return Math.floor(Math.random() * max);
+}
+
 var generateRandomData = function () {
-  var wNIndex = Math.floor(Math.random() * WIZARD_NAMES.length);
-  var wSIndex = Math.floor(Math.random() * WIZARD_SURNAMES.length);
-  var cCIndex = Math.floor(Math.random() * COAT_COLOR.length);
-  var eCIndex = Math.floor(Math.random() * EYES_COLOR.length);
+  var wNIndex = getRandomNumber(WIZARD_NAMES.length);
+  var wSIndex = getRandomNumber(WIZARD_SURNAMES.length);
+  var cCIndex = getRandomNumber(COAT_COLOR.length);
+  var eCIndex = getRandomNumber(EYES_COLOR.length);
   var data = {
     name: WIZARD_NAMES[wNIndex] + ' ' + WIZARD_SURNAMES[wSIndex],
     coatColor: COAT_COLOR[cCIndex],
     eyesColor: EYES_COLOR[eCIndex]
   };
-  WIZARD_NAMES.splice(wNIndex, 1);
-  WIZARD_SURNAMES.splice(wSIndex, 1);
-  COAT_COLOR.splice(cCIndex, 1);
-  EYES_COLOR.splice(eCIndex, 1);
 
   return data;
+};
+
+var generateRandomWizard = function () {
+  var {name, coatColor, eyesColor} = generateRandomData();
+  return generateWizard(name, coatColor, eyesColor);
 };
 
 var fillWizardsArray = function () {
   var wArray = [];
 
   for (var i = 0; i < MAX_WIZARDS_COUNT; i++) {
-    var {name, coatColor, eyesColor} = generateRandomData();
-    wArray.push(generateWizard(name, coatColor, eyesColor));
-
-  }
+    wArray.push(generateRandomWizard());
+  };
   return wArray;
 };
 
